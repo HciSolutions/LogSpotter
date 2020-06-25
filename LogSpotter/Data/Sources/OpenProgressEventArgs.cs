@@ -8,7 +8,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
     public class OpenProgressEventArgs : EventArgs
     {
         #region Private Members
-        private int _eventCount;
+
         #endregion
 
         #region Constructor
@@ -18,7 +18,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// <param name="eventCount">The number of events loaded so far.</param>
         public OpenProgressEventArgs(int eventCount)
         {
-            _eventCount = Math.Max(0, eventCount);
+            EventCount = Math.Max(0, eventCount);
         }
         #endregion
 
@@ -27,7 +27,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// Gets the number of events loaded so far.
         /// </summary>
         /// <value>The number of events loaded so far.</value>
-        public int EventCount => _eventCount;
+        public int EventCount { get; }
 
         #endregion
     }

@@ -11,11 +11,9 @@ namespace HciSolutions.LogSpotter.Data.Sources
     public abstract class LogDataSource : IDisposable
     {
         #region Private Members
-        private string _connectionString;
+
         private bool _holdedReset;
         private List<LogEvent> _holdedEvents;
-        private ISynchronizeInvoke _eventSyncObject;
-        private string _name;
         private bool _isOnline;
         private string _error;
         #endregion
@@ -27,16 +25,16 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// <param name="connectionString">The connection string.</param>
         public LogDataSource(string connectionString)
         {
-            _connectionString = connectionString;
+            ConnectionString = connectionString;
             _holdedReset = false;
             _holdedEvents = null;
             _isOnline = false;
             _error = null;
 
             if (this.GetType().IsDefined(typeof(LogDataSourceTypeAttribute), true))
-                _name = ((LogDataSourceTypeAttribute)this.GetType().GetCustomAttributes(typeof(LogDataSourceTypeAttribute), true)[0]).Name;
+                Name = ((LogDataSourceTypeAttribute)this.GetType().GetCustomAttributes(typeof(LogDataSourceTypeAttribute), true)[0]).Name;
             else
-                _name = this.GetType().Name;
+                Name = this.GetType().Name;
         }
         #endregion
 
@@ -45,7 +43,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// Gets the connection string.
         /// </summary>
         /// <value>The connection string.</value>
-        public virtual string ConnectionString => _connectionString;
+        public virtual string ConnectionString { get; }
 
         /// <summary>
         /// Gets a value indicating whether this data source is able to provide log informations.
@@ -90,11 +88,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// Gets or sets the the objecte to use to synchronize events raised by this class.
         /// </summary>
         /// <value>A <see cref="ISynchronizeInvoke"/> instance to use to synchronize events raised by this class; <c>null</c> if no synchronization is required.</value>
-        public ISynchronizeInvoke EventSyncObject
-        {
-            get => _eventSyncObject;
-            set => _eventSyncObject = value;
-        }
+        public ISynchronizeInvoke EventSyncObject { get; set; }
 
         /// <summary>
         /// Gets or Sets a value indicating whether new events are hold.
@@ -135,7 +129,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// Gets the implementation name of the data source.
         /// </summary>
         /// <value>The implementation name of the data source.</value>
-        public virtual string Name => _name;
+        public virtual string Name { get; }
 
         /// <summary>
         /// Gets the icon to show next to the data source in the UI.
@@ -241,8 +235,8 @@ namespace HciSolutions.LogSpotter.Data.Sources
         {
             if (ErrorChanged != null)
             {
-                if (_eventSyncObject != null && _eventSyncObject.InvokeRequired)
-                    _eventSyncObject.Invoke(ErrorChanged, new object[] { this, e });
+                if (EventSyncObject != null && EventSyncObject.InvokeRequired)
+                    EventSyncObject.Invoke(ErrorChanged, new object[] { this, e });
                 else
                     ErrorChanged(this, e);
             }
@@ -256,8 +250,8 @@ namespace HciSolutions.LogSpotter.Data.Sources
         {
             if (IsOnlineChanged != null)
             {
-                if (_eventSyncObject != null && _eventSyncObject.InvokeRequired)
-                    _eventSyncObject.Invoke(IsOnlineChanged, new object[] { this, e });
+                if (EventSyncObject != null && EventSyncObject.InvokeRequired)
+                    EventSyncObject.Invoke(IsOnlineChanged, new object[] { this, e });
                 else
                     IsOnlineChanged(this, e);
             }
@@ -280,8 +274,8 @@ namespace HciSolutions.LogSpotter.Data.Sources
                     }
                 }
 
-                if (_eventSyncObject != null && _eventSyncObject.InvokeRequired)
-                    _eventSyncObject.Invoke(NewLog, new object[] { this, e });
+                if (EventSyncObject != null && EventSyncObject.InvokeRequired)
+                    EventSyncObject.Invoke(NewLog, new object[] { this, e });
                 else
                     NewLog(this, e);
             }
@@ -316,8 +310,8 @@ namespace HciSolutions.LogSpotter.Data.Sources
                     }
                 }
 
-                if (_eventSyncObject != null && _eventSyncObject.InvokeRequired)
-                    _eventSyncObject.Invoke(Reset, new object[] { this, e });
+                if (EventSyncObject != null && EventSyncObject.InvokeRequired)
+                    EventSyncObject.Invoke(Reset, new object[] { this, e });
                 else
                     Reset(this, e);
             }

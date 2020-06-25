@@ -14,7 +14,7 @@ namespace HciSolutions.LogSpotter.Controls
     public partial class LogViewer : UserControl
     {
         #region Private Members
-        private bool _followLastLog;
+
         #endregion
 
         #region Constructor
@@ -24,7 +24,7 @@ namespace HciSolutions.LogSpotter.Controls
         public LogViewer()
         {
             InitializeComponent();
-            _followLastLog = true;
+            FollowLastLog = true;
         }
         #endregion
 
@@ -33,12 +33,7 @@ namespace HciSolutions.LogSpotter.Controls
         /// Gets or sets a value indicating whether the selected item list is always the last inserted log.
         /// </summary>
         /// <value><c>true</c> if the selected item list is always the last inserted log; otherwise, <c>false</c>.</value>
-        public bool FollowLastLog
-        {
-            get => _followLastLog;
-            set => _followLastLog = value;
-        }
-
+        public bool FollowLastLog { get; set; }
 
         /// <summary>
         /// Gets or sets the log collection that is displayed.
@@ -62,7 +57,7 @@ namespace HciSolutions.LogSpotter.Controls
             try
             {
                 // Follows the last log ?
-                if (_followLastLog)
+                if (FollowLastLog)
                 {
                     if (e.ListChangedType == ListChangedType.ItemAdded)
                     {

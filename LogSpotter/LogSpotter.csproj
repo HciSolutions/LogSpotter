@@ -135,6 +135,7 @@
     <Compile Include="Data\Sources\OpenProgressEventArgs.cs" />
     <Compile Include="Data\Sources\LogDataSourceFactory.cs" />
     <Compile Include="Data\Sources\LogDataSourceTypeAttribute.cs" />
+    <Compile Include="Data\Sources\SqlServerDataSource.cs" />
     <Compile Include="Data\Sources\TelnetLogDataSource.cs" />
     <Compile Include="Data\Sources\ResetEventHandler.cs" />
     <Compile Include="Data\Sources\ResetEventArgs.cs" />
@@ -235,6 +236,7 @@
     <Content Include="Images\LogSourceFile.png" />
     <Content Include="Images\PauseCapture.png" />
     <Content Include="Images\LogSourceTelnet.png" />
+    <None Include="Images\SqlServer.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -8,8 +8,7 @@ namespace HciSolutions.LogSpotter.Data.Config
     public class RecentLog
     {
         #region Private Members
-        private string _type;
-        private string _connectionString;
+
         #endregion
 
         #region Constructor
@@ -18,8 +17,8 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// </summary>
         public RecentLog()
         {
-            _type = null;
-            _connectionString = null;
+            Type = null;
+            ConnectionString = null;
         }
 
         /// <summary>
@@ -29,8 +28,8 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// <param name="type">The type.</param>
         public RecentLog(string connectionString, string type)
         {
-            _connectionString = connectionString;
-            _type = type;
+            ConnectionString = connectionString;
+            Type = type;
         }
         #endregion
 
@@ -40,22 +39,15 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// </summary>
         /// <value>The connection string.</value>
         [XmlText]
-        public string ConnectionString
-        {
-            get => _connectionString;
-            set => _connectionString = value;
-        }
+        public string ConnectionString { get; set; }
 
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
         [XmlAttribute("type")]
-        public string Type
-        {
-            get => _type;
-            set => _type = value;
-        }
+        public string Type { get; set; }
+
         #endregion
     }
 }

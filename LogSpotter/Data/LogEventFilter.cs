@@ -33,8 +33,7 @@ namespace HciSolutions.LogSpotter.Data
         private Regex _fileNameRegex;
         private Regex _messageRegex;
         private Regex _exceptionRegex;
-        private LogLevels _logLevels;
-        private string _filterString;
+
         #endregion
 
         #region Constructor
@@ -48,12 +47,12 @@ namespace HciSolutions.LogSpotter.Data
             _exceptionRegex = null;
             _fileNameRegex = null;
             _loggerRegex = null;
-            _logLevels = LogLevels.Debug | LogLevels.Info | LogLevels.Warn | LogLevels.Error | LogLevels.Fatal;
+            LogLevels = LogLevels.Debug | LogLevels.Info | LogLevels.Warn | LogLevels.Error | LogLevels.Fatal;
             _maxDate = null;
             _messageRegex = null;
             _minDate = null;
             _threadRegex = null;
-            _filterString = null;
+            FilterString = null;
         }
 
         /// <summary>
@@ -78,7 +77,7 @@ namespace HciSolutions.LogSpotter.Data
             _fileNameRegex = String.IsNullOrEmpty(fileNameRegex) ? null : new Regex(fileNameRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             _messageRegex = String.IsNullOrEmpty(messageRegex) ? null : new Regex(messageRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             _loggerRegex = String.IsNullOrEmpty(loggerRegex) ? null : new Regex(loggerRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            _logLevels = logLevels;
+            LogLevels = logLevels;
             _maxDate = maxDate;
             _minDate = minDate;
             _threadRegex = String.IsNullOrEmpty(threadRegex) ? null : new Regex(threadRegex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -126,7 +125,7 @@ namespace HciSolutions.LogSpotter.Data
                         else if (parts[0] == EXCEPTION_KEY.ToLower() && !String.IsNullOrEmpty(parts[1]))
                             _exceptionRegex = new Regex(parts[1], RegexOptions.Compiled | RegexOptions.IgnoreCase);
                         else if (parts[0] == LOGLEVELS_KEY.ToLower() && !String.IsNullOrEmpty(parts[1]))
-                            _logLevels = (LogLevels)Enum.Parse(typeof(LogLevels), parts[1]);
+                            LogLevels = (LogLevels)Enum.Parse(typeof(LogLevels), parts[1]);
                     }
                 }
             }
@@ -161,7 +160,7 @@ namespace HciSolutions.LogSpotter.Data
                 return false;
             if (_exceptionRegex != null && !_exceptionRegex.IsMatch(ev.Exception))
                 return false;
-            if ((ev.Level & _logLevels) != ev.Level)
+            if ((ev.Level & LogLevels) != ev.Level)
                 return false;
 
             return true;
@@ -175,7 +174,7 @@ namespace HciSolutions.LogSpotter.Data
         /// </returns>
         public override string ToString()
         {
-            if (_filterString == null)
+            if (FilterString == null)
             {
                 StringBuilder sb = new StringBuilder();
 
@@ -197,14 +196,14 @@ namespace HciSolutions.LogSpotter.Data
                     sb.AppendLine(String.Format("{0}={1}", MESSAGE_KEY, _messageRegex));
                 if (_exceptionRegex != null)
                     sb.AppendLine(String.Format("{0}={1}", EXCEPTION_KEY, _exceptionRegex));
-                if (_logLevels != (LogLevels.Debug | LogLevels.Info | LogLevels.Warn | LogLevels.Error | LogLevels.Fatal))
-                    sb.AppendLine(String.Format("{0}={1}", LOGLEVELS_KEY, _logLevels));
+                if (LogLevels != (LogLevels.Debug | LogLevels.Info | LogLevels.Warn | LogLevels.Error | LogLevels.Fatal))
+                    sb.AppendLine(String.Format("{0}={1}", LOGLEVELS_KEY, LogLevels));
 
-                _filterString = sb.ToString();
+                FilterString = sb.ToString();
             }
 
 
-            return _filterString;
+            return FilterString;
         }
         #endregion
 
@@ -253,11 +252,7 @@ namespace HciSolutions.LogSpotter.Data
         /// Gets or sets the filter string.
         /// </summary>
         /// <value>The filter string.</value>
-        public string FilterString
-        {
-            get => _filterString;
-            set => _filterString = value;
-        }
+        public string FilterString { get; set; }
 
         /// <summary>
         /// Gets or sets the logger regex.
@@ -273,11 +268,7 @@ namespace HciSolutions.LogSpotter.Data
         /// Gets or sets the log levels.
         /// </summary>
         /// <value>The log levels.</value>
-        public LogLevels LogLevels
-        {
-            get => _logLevels;
-            set => _logLevels = value;
-        }
+        public LogLevels LogLevels { get; set; }
 
         /// <summary>
         /// Gets or sets the max date.

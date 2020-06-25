@@ -8,7 +8,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
     public class ResetEventArgs : EventArgs
     {
         #region Private Members
-        private LogEvent[] _events;
+
         #endregion
 
         #region Constructor
@@ -18,7 +18,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// <param name="ev">The list of <see cref="LogEvent"/> available after the reset.</param>
         public ResetEventArgs(params LogEvent[] ev)
         {
-            _events = ev;
+            Events = ev;
         }
         #endregion
 
@@ -27,7 +27,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// Gets or sets the list of <see cref="LogEvent"/> available after the reset.
         /// </summary>
         /// <value>The list of <see cref="LogEvent"/> available after the reset.</value>
-        public LogEvent[] Events => _events;
+        public LogEvent[] Events { get; }
 
         #endregion
     }

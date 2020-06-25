@@ -10,12 +10,7 @@ namespace HciSolutions.LogSpotter.Data.Config
     public class WindowPositioning : IComparable<WindowPositioning>
     {
         #region Private Members
-        private int _y;
-        private int _x;
-        private int _width;
-        private int _height;
-        private string _name;
-        private FormWindowState _windowState;
+
         #endregion
 
         #region Constructor
@@ -24,12 +19,12 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// </summary>
         public WindowPositioning()
         {
-            _y = 0;
-            _x = 0;
-            _width = 0;
-            _height = 0;
-            _name = null;
-            _windowState = FormWindowState.Normal;
+            Y = 0;
+            X = 0;
+            Width = 0;
+            Height = 0;
+            Name = null;
+            WindowState = FormWindowState.Normal;
         }
         #endregion
 
@@ -39,67 +34,43 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// </summary>
         /// <value>The name of the window.</value>
         [XmlAttribute("name")]
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
-
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the X coordinate of the top-left window corner.
         /// </summary>
         /// <value>The X coordinate of the top-left window corner.</value>
         [XmlAttribute("x")]
-        public int X
-        {
-            get => _x;
-            set => _x = value;
-        }
+        public int X { get; set; }
 
         /// <summary>
         /// Gets or sets the Y coordinate of the top-left window corner.
         /// </summary>
         /// <value>The Y coordinate of the top-left window corner.</value>
         [XmlAttribute("y")]
-        public int Y
-        {
-            get => _y;
-            set => _y = value;
-        }
+        public int Y { get; set; }
 
         /// <summary>
         /// Gets or sets the width of the window.
         /// </summary>
         /// <value>The width of the window.</value>
         [XmlAttribute("width")]
-        public int Width
-        {
-            get => _width;
-            set => _width = value;
-        }
+        public int Width { get; set; }
 
         /// <summary>
         /// Gets or sets the height of the window.
         /// </summary>
         /// <value>The height of the window.</value>
         [XmlAttribute("height")]
-        public int Height
-        {
-            get => _height;
-            set => _height = value;
-        }
+        public int Height { get; set; }
 
         /// <summary>
         /// Gets or sets the state of the window.
         /// </summary>
         /// <value>The state of the window.</value>
         [XmlAttribute("state")]
-        public FormWindowState WindowState
-        {
-            get => _windowState;
-            set => _windowState = value;
-        }
+        public FormWindowState WindowState { get; set; }
+
         #endregion
 
         #region IComparable<WindowPositioning> Members
@@ -118,7 +89,7 @@ namespace HciSolutions.LogSpotter.Data.Config
             if (other == null)
                 return 1;
 
-            return String.Compare(_name, other.Name);
+            return String.Compare(Name, other.Name);
         }
         #endregion
     }

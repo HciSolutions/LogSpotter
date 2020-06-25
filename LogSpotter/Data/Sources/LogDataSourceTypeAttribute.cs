@@ -9,7 +9,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
     public class LogDataSourceTypeAttribute : Attribute
     {
         #region Private Members
-        private string _name;
+
         #endregion
 
         #region Constructor
@@ -19,7 +19,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// <param name="name">The name of the datasource type.</param>
         public LogDataSourceTypeAttribute(string name)
         {
-            _name = name;
+            Name = name;
         }
         #endregion
 
@@ -28,7 +28,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// Gets the name of the datasource type.
         /// </summary>
         /// <value>The name of the datasource type.</value>
-        public string Name => _name;
+        public string Name { get; }
 
         #endregion
     }

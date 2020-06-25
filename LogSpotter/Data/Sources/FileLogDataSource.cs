@@ -40,8 +40,8 @@ namespace HciSolutions.LogSpotter.Data.Sources
             _tmpData = new MemoryStream();
             _fsWatcher = new FileSystemWatcher(Path.GetDirectoryName(logFileName), Path.GetFileName(logFileName));
             _fsWatcher.NotifyFilter = NotifyFilters.LastWrite;
-            _fsWatcher.Changed += new FileSystemEventHandler(HandleFileChanged);
-            _timer = new Timer(new TimerCallback(HandleTimerExpired));
+            _fsWatcher.Changed += HandleFileChanged;
+            _timer = new Timer(HandleTimerExpired);
             _timerRunning = false;
         }
         #endregion

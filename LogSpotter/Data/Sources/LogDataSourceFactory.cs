@@ -11,7 +11,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
     {
         #region Private Members
         private static Dictionary<string, Type> _dataSourceTypes;
-        private static string[] _dataSourceTypeNames;
+
         #endregion
 
         #region Constructor
@@ -27,9 +27,9 @@ namespace HciSolutions.LogSpotter.Data.Sources
                     _dataSourceTypes[((LogDataSourceTypeAttribute)t.GetCustomAttributes(typeof(LogDataSourceTypeAttribute), true)[0]).Name] = t;
             }
 
-            _dataSourceTypeNames = new string[_dataSourceTypes.Count];
-            _dataSourceTypes.Keys.CopyTo(_dataSourceTypeNames,  0);
-            Array.Sort<string>(_dataSourceTypeNames);
+            DataSourceTypeNames = new string[_dataSourceTypes.Count];
+            _dataSourceTypes.Keys.CopyTo(DataSourceTypeNames,  0);
+            Array.Sort<string>(DataSourceTypeNames);
         }
         #endregion
 
@@ -38,7 +38,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// Gets the data source type names.
         /// </summary>
         /// <value>The data source type names.</value>
-        public static string[] DataSourceTypeNames => _dataSourceTypeNames;
+        public static string[] DataSourceTypeNames { get; }
 
         #endregion
 

@@ -344,6 +344,16 @@ namespace HciSolutions.LogSpotter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SqlServer {
+            get {
+                object obj = ResourceManager.GetObject("SqlServer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Offline.
         /// </summary>
         internal static string Status_Offline {

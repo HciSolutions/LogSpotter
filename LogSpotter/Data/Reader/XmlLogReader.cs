@@ -155,20 +155,22 @@ namespace HciSolutions.LogSpotter.Data.Reader
                     reader.Read();
             }
 
-            return new LogEvent(
-                eventNumber,
-                logger,
-                timeStamp,
-                level,
-                thread,
-                domain,
-                userName,
-                message,
-                exception,
-                className,
-                methodName,
-                fileName,
-                lineNumber);
+            return new LogEvent
+            {
+                EventNumber = eventNumber,
+                Logger = logger,
+                TimeStamp = timeStamp,
+                Level = level,
+                Thread = thread,
+                Domain = domain,
+                UserName = userName,
+                Message = message,
+                Exception = exception,
+                ClassName = className,
+                MethodName = methodName,
+                FileName = fileName,
+                LineNumber = lineNumber,
+            };
         }
         #endregion
 

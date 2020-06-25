@@ -920,8 +920,7 @@ namespace HciSolutions.LogSpotter.Data
         private class LogEventComparer : IComparer<LogEvent>
         {
             #region Private Members
-            private ListSortDirection _sortDirection;
-            private PropertyDescriptor _property;
+
             private Func<LogEvent, LogEvent, int> _compareMethod;
             #endregion
 
@@ -936,8 +935,8 @@ namespace HciSolutions.LogSpotter.Data
                 if (property == null)
                     throw new ArgumentNullException("property");
 
-                _sortDirection = sortDirection;
-                _property = property;
+                SortDirection = sortDirection;
+                Property = property;
 
                 switch (property.Name)
                 {
@@ -989,13 +988,13 @@ namespace HciSolutions.LogSpotter.Data
             /// Gets the sort direction.
             /// </summary>
             /// <value>The sort direction.</value>
-            public ListSortDirection SortDirection => _sortDirection;
+            public ListSortDirection SortDirection { get; }
 
             /// <summary>
             /// Gets the <see cref="PropertyDescriptor"/> specified at the constructor.
             /// </summary>
             /// <value>The <see cref="PropertyDescriptor"/> specified at the constructor.</value>
-            public PropertyDescriptor Property => _property;
+            public PropertyDescriptor Property { get; }
 
             #endregion
 

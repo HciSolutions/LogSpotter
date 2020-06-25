@@ -208,6 +208,9 @@
   <data name="PauseCapture" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\pausecapture.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SqlServer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\SqlServer.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Status_Offline" xml:space="preserve">
     <value>Offline</value>
   </data>

@@ -12,15 +12,12 @@ namespace HciSolutions.LogSpotter.Data.Config
     public class Config
     {
         #region Private Static Members
-        private static Config _current;
+
         private static string _logFileName;
         #endregion
 
         #region Private Members
-        private List<RecentLog> _recentLogs;
-        private WindowPositioningCollection _windowPositions;
-        private EventColors _eventColors;
-        private int _maxEvents;
+
         #endregion
 
         #region Constructor
@@ -29,7 +26,7 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// </summary>
         static Config()
         {
-            _current = null;
+            Current = null;
             _logFileName = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Log4NetViewer"), "Config.xml");            
 
             if (!Directory.Exists(Path.GetDirectoryName(_logFileName)))
@@ -45,10 +42,10 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// <param name="recentLogs">The recent logs.</param>
         public Config()
         {
-            _eventColors = new EventColors();
-            _recentLogs = new List<RecentLog>();
-            _windowPositions = new WindowPositioningCollection();
-            _maxEvents = 200000;
+            EventColors = new EventColors();
+            RecentLogs = new List<RecentLog>();
+            WindowPositions = new WindowPositioningCollection();
+            MaxEvents = 200000;
         }
         #endregion
 
@@ -57,7 +54,7 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// Gets the current configuration.
         /// </summary>
         /// <value>The current configuration.</value>
-        public static Config Current => _current;
+        public static Config Current { get; private set; }
 
         #endregion
 
@@ -67,22 +64,14 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// </summary>
         /// <value>The event colors.</value>
         [XmlElement("colors")]
-        public EventColors EventColors
-        {
-            get => _eventColors;
-            set => _eventColors = value;
-        }
+        public EventColors EventColors { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum number of events kept in memory.
         /// </summary>
         /// <value>The maximum number of events kept in memory.</value>
         [XmlAttribute("maxEvents")]
-        public int MaxEvents
-        {
-            get => _maxEvents;
-            set => _maxEvents = value;
-        }
+        public int MaxEvents { get; set; }
 
         /// <summary>
         /// Gets or sets the recent logs.
@@ -90,11 +79,7 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// <value>The recent logs.</value>
         [XmlArray("recentLogs")]
         [XmlArrayItem("recentLog")]
-        public List<RecentLog> RecentLogs
-        {
-            get => _recentLogs;
-            set => _recentLogs = value;
-        }
+        public List<RecentLog> RecentLogs { get; set; }
 
         /// <summary>
         /// Gets or sets the window positions.
@@ -102,11 +87,8 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// <value>The window positions.</value>
         [XmlArray("windowPositions")]
         [XmlArrayItem("windowPosition")]
-        public WindowPositioningCollection WindowPositions
-        {
-            get => _windowPositions;
-            set => _windowPositions = value;
-        }
+        public WindowPositioningCollection WindowPositions { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -124,16 +106,16 @@ namespace HciSolutions.LogSpotter.Data.Config
                     using (FileStream input = new FileStream(_logFileName, FileMode.Open, FileAccess.Read))
                     {
                         serializer = new XmlSerializer(typeof(Config));
-                        _current = (Config)serializer.Deserialize(input);
+                        Current = (Config)serializer.Deserialize(input);
                     }
                 }
                 else
                 {
-                    _current = new Config();
+                    Current = new Config();
                     Save();
                 }
             }
-            catch { _current = new Config(); }
+            catch { Current = new Config(); }
         }
 
         /// <summary>
@@ -145,7 +127,7 @@ namespace HciSolutions.LogSpotter.Data.Config
 
             using (FileStream output = new FileStream(_logFileName, FileMode.Create, FileAccess.Write))
             {
-                serializer.Serialize(output, _current);
+                serializer.Serialize(output, Current);
             }
         }
         #endregion
