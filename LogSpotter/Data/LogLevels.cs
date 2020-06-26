@@ -9,24 +9,28 @@ namespace HciSolutions.LogSpotter.Data
     public enum LogLevels
     {
         /// <summary>
+        /// Defines the TRACE log severity.
+        /// </summary>
+        Trace,
+        /// <summary>
         /// Defines the DEBUG log severity.
         /// </summary>
-        Debug = 0x01,
+        Debug,
         /// <summary>
         /// Defines the INFO log severity.
         /// </summary>
-        Info = 0x02,
+        Info,
         /// <summary>
         /// Defines the WARN log severity.
         /// </summary>
-        Warn = 0x04,
+        Warn,
         /// <summary>
         /// Defines the ERROR log severity.
         /// </summary>
-        Error = 0x08,
+        Error,
         /// <summary>
         /// Defines the FATAL log severity.
         /// </summary>
-        Fatal = 0x10
+        Fatal
     }
 }

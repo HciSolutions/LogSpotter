@@ -20,6 +20,7 @@ namespace HciSolutions.LogSpotter
 
             // Initialize the data sources.
             bsConfig.DataSource = Config.Current;
+            bsColorTrace.DataSource = Config.Current.EventColors.Trace;
             bsColorDebug.DataSource = Config.Current.EventColors.Debug;
             bsColorInfo.DataSource = Config.Current.EventColors.Info;
             bsColorWarning.DataSource = Config.Current.EventColors.Warning;

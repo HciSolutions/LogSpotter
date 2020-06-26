@@ -142,5 +142,29 @@ namespace HciSolutions.LogSpotter.Properties {
                 this["FatalForegroundColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("192, 255, 192")]
+        public global::System.Drawing.Color TraceBackgroundColor {
+            get {
+                return ((global::System.Drawing.Color)(this["TraceBackgroundColor"]));
+            }
+            set {
+                this["TraceBackgroundColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public global::System.Drawing.Color TraceForegroundColor {
+            get {
+                return ((global::System.Drawing.Color)(this["TraceForegroundColor"]));
+            }
+            set {
+                this["TraceForegroundColor"] = value;
+            }
+        }
     }
 }

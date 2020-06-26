@@ -56,6 +56,7 @@
             this.lblFilterDomainTitle = new System.Windows.Forms.Label();
             this.lblFilterFileNameTitle = new System.Windows.Forms.Label();
             this.lblFilterExceptionTitle = new System.Windows.Forms.Label();
+            this.cbFilterLevelTrace = new System.Windows.Forms.CheckBox();
             this.gbFilters.SuspendLayout();
             this.tlpFilters.SuspendLayout();
             this.flpLogLevels.SuspendLayout();
@@ -68,7 +69,7 @@
             this.gbFilters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbFilters.Location = new System.Drawing.Point(0, 0);
             this.gbFilters.Name = "gbFilters";
-            this.gbFilters.Size = new System.Drawing.Size(773, 125);
+            this.gbFilters.Size = new System.Drawing.Size(773, 124);
             this.gbFilters.TabIndex = 1;
             this.gbFilters.TabStop = false;
             this.gbFilters.Text = "Filters";
@@ -108,12 +109,13 @@
             this.tlpFilters.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpFilters.Size = new System.Drawing.Size(767, 106);
+            this.tlpFilters.Size = new System.Drawing.Size(767, 105);
             this.tlpFilters.TabIndex = 0;
             // 
             // flpLogLevels
             // 
             this.flpLogLevels.AutoSize = true;
+            this.flpLogLevels.Controls.Add(this.cbFilterLevelTrace);
             this.flpLogLevels.Controls.Add(this.cbFilterLevelDebug);
             this.flpLogLevels.Controls.Add(this.cbFilterLevelInfo);
             this.flpLogLevels.Controls.Add(this.cbFilterLevelWarning);
@@ -124,7 +126,7 @@
             this.flpLogLevels.Margin = new System.Windows.Forms.Padding(0);
             this.flpLogLevels.Name = "flpLogLevels";
             this.tlpFilters.SetRowSpan(this.flpLogLevels, 5);
-            this.flpLogLevels.Size = new System.Drawing.Size(72, 106);
+            this.flpLogLevels.Size = new System.Drawing.Size(72, 105);
             this.flpLogLevels.TabIndex = 10;
             // 
             // cbFilterLevelDebug
@@ -132,8 +134,8 @@
             this.cbFilterLevelDebug.AutoSize = true;
             this.cbFilterLevelDebug.Checked = true;
             this.cbFilterLevelDebug.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbFilterLevelDebug.Location = new System.Drawing.Point(3, 3);
-            this.cbFilterLevelDebug.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.cbFilterLevelDebug.Location = new System.Drawing.Point(3, 19);
+            this.cbFilterLevelDebug.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.cbFilterLevelDebug.Name = "cbFilterLevelDebug";
             this.cbFilterLevelDebug.Size = new System.Drawing.Size(58, 17);
             this.cbFilterLevelDebug.TabIndex = 0;
@@ -145,8 +147,8 @@
             this.cbFilterLevelInfo.AutoSize = true;
             this.cbFilterLevelInfo.Checked = true;
             this.cbFilterLevelInfo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbFilterLevelInfo.Location = new System.Drawing.Point(3, 23);
-            this.cbFilterLevelInfo.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.cbFilterLevelInfo.Location = new System.Drawing.Point(3, 36);
+            this.cbFilterLevelInfo.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.cbFilterLevelInfo.Name = "cbFilterLevelInfo";
             this.cbFilterLevelInfo.Size = new System.Drawing.Size(44, 17);
             this.cbFilterLevelInfo.TabIndex = 1;
@@ -158,8 +160,8 @@
             this.cbFilterLevelWarning.AutoSize = true;
             this.cbFilterLevelWarning.Checked = true;
             this.cbFilterLevelWarning.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbFilterLevelWarning.Location = new System.Drawing.Point(3, 43);
-            this.cbFilterLevelWarning.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.cbFilterLevelWarning.Location = new System.Drawing.Point(3, 53);
+            this.cbFilterLevelWarning.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.cbFilterLevelWarning.Name = "cbFilterLevelWarning";
             this.cbFilterLevelWarning.Size = new System.Drawing.Size(66, 17);
             this.cbFilterLevelWarning.TabIndex = 2;
@@ -171,8 +173,8 @@
             this.cbFilterLevelError.AutoSize = true;
             this.cbFilterLevelError.Checked = true;
             this.cbFilterLevelError.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbFilterLevelError.Location = new System.Drawing.Point(3, 63);
-            this.cbFilterLevelError.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.cbFilterLevelError.Location = new System.Drawing.Point(3, 70);
+            this.cbFilterLevelError.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.cbFilterLevelError.Name = "cbFilterLevelError";
             this.cbFilterLevelError.Size = new System.Drawing.Size(48, 17);
             this.cbFilterLevelError.TabIndex = 3;
@@ -184,8 +186,8 @@
             this.cbFilterLevelFatal.AutoSize = true;
             this.cbFilterLevelFatal.Checked = true;
             this.cbFilterLevelFatal.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbFilterLevelFatal.Location = new System.Drawing.Point(3, 83);
-            this.cbFilterLevelFatal.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.cbFilterLevelFatal.Location = new System.Drawing.Point(3, 87);
+            this.cbFilterLevelFatal.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.cbFilterLevelFatal.Name = "cbFilterLevelFatal";
             this.cbFilterLevelFatal.Size = new System.Drawing.Size(49, 17);
             this.cbFilterLevelFatal.TabIndex = 4;
@@ -392,13 +394,26 @@
             this.lblFilterExceptionTitle.TabIndex = 0;
             this.lblFilterExceptionTitle.Text = "Exception:";
             // 
+            // cbFilterLevelTrace
+            // 
+            this.cbFilterLevelTrace.AutoSize = true;
+            this.cbFilterLevelTrace.Checked = true;
+            this.cbFilterLevelTrace.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbFilterLevelTrace.Location = new System.Drawing.Point(3, 2);
+            this.cbFilterLevelTrace.Margin = new System.Windows.Forms.Padding(3, 2, 3, 0);
+            this.cbFilterLevelTrace.Name = "cbFilterLevelTrace";
+            this.cbFilterLevelTrace.Size = new System.Drawing.Size(54, 17);
+            this.cbFilterLevelTrace.TabIndex = 0;
+            this.cbFilterLevelTrace.Text = "Trace";
+            this.cbFilterLevelTrace.UseVisualStyleBackColor = true;
+            // 
             // DisplayFilter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gbFilters);
             this.Name = "DisplayFilter";
-            this.Size = new System.Drawing.Size(773, 125);
+            this.Size = new System.Drawing.Size(773, 124);
             this.gbFilters.ResumeLayout(false);
             this.tlpFilters.ResumeLayout(false);
             this.tlpFilters.PerformLayout();
@@ -440,5 +455,6 @@
         private System.Windows.Forms.DateTimePicker dtpFilterTimeStampTo;
         private System.Windows.Forms.DateTimePicker dtpFilterTimeStampFrom;
         private System.Windows.Forms.CheckBox cbFilterTimeStampEnabled;
+        private System.Windows.Forms.CheckBox cbFilterLevelTrace;
     }
 }

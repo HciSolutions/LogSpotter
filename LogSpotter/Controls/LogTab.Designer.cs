@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
+            this.ucDisplayFilter = new HciSolutions.LogSpotter.Controls.DisplayFilter();
+            this.ucLogView = new HciSolutions.LogSpotter.Controls.LogViewer();
             this.ssStatus = new System.Windows.Forms.StatusStrip();
             this.tsslLoading = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslTotalEvents = new System.Windows.Forms.ToolStripStatusLabel();
@@ -41,8 +43,6 @@
             this.tsslStatusOnline = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslStatusError = new System.Windows.Forms.ToolStripStatusLabel();
             this.tmrBinkErrorStatus = new System.Windows.Forms.Timer(this.components);
-            this.ucDisplayFilter = new DisplayFilter();
-            this.ucLogView = new LogViewer();
             this.tlpMain.SuspendLayout();
             this.ssStatus.SuspendLayout();
             this.SuspendLayout();
@@ -63,6 +63,24 @@
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMain.Size = new System.Drawing.Size(780, 588);
             this.tlpMain.TabIndex = 0;
+            // 
+            // ucDisplayFilter
+            // 
+            this.ucDisplayFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ucDisplayFilter.Location = new System.Drawing.Point(3, 3);
+            this.ucDisplayFilter.Name = "ucDisplayFilter";
+            this.ucDisplayFilter.Size = new System.Drawing.Size(774, 125);
+            this.ucDisplayFilter.TabIndex = 0;
+            // 
+            // ucLogView
+            // 
+            this.ucLogView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ucLogView.FollowLastLog = true;
+            this.ucLogView.Location = new System.Drawing.Point(3, 134);
+            this.ucLogView.LogCollection = null;
+            this.ucLogView.Name = "ucLogView";
+            this.ucLogView.Size = new System.Drawing.Size(774, 429);
+            this.ucLogView.TabIndex = 1;
             // 
             // ssStatus
             // 
@@ -86,7 +104,7 @@
             // tsslLoading
             // 
             this.tsslLoading.Name = "tsslLoading";
-            this.tsslLoading.Size = new System.Drawing.Size(44, 17);
+            this.tsslLoading.Size = new System.Drawing.Size(50, 17);
             this.tsslLoading.Text = "Loading";
             // 
             // tsslTotalEvents
@@ -108,7 +126,7 @@
             // tsslFullSourceName
             // 
             this.tsslFullSourceName.Name = "tsslFullSourceName";
-            this.tsslFullSourceName.Size = new System.Drawing.Size(376, 17);
+            this.tsslFullSourceName.Size = new System.Drawing.Size(370, 17);
             this.tsslFullSourceName.Spring = true;
             this.tsslFullSourceName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -154,24 +172,6 @@
             // 
             this.tmrBinkErrorStatus.Interval = 250;
             this.tmrBinkErrorStatus.Tick += new System.EventHandler(this.tmrBinkErrorStatus_Tick);
-            // 
-            // ucDisplayFilter
-            // 
-            this.ucDisplayFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ucDisplayFilter.Location = new System.Drawing.Point(3, 3);
-            this.ucDisplayFilter.Name = "ucDisplayFilter";
-            this.ucDisplayFilter.Size = new System.Drawing.Size(774, 125);
-            this.ucDisplayFilter.TabIndex = 0;
-            // 
-            // ucLogView
-            // 
-            this.ucLogView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ucLogView.FollowLastLog = true;
-            this.ucLogView.Location = new System.Drawing.Point(3, 134);
-            this.ucLogView.LogCollection = null;
-            this.ucLogView.Name = "ucLogView";
-            this.ucLogView.Size = new System.Drawing.Size(774, 429);
-            this.ucLogView.TabIndex = 1;
             // 
             // LogTab
             // 

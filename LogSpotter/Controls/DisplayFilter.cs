@@ -30,6 +30,8 @@ namespace HciSolutions.LogSpotter.Controls
             {
                 LogLevels levelFilter = (LogLevels)0;
 
+                if (cbFilterLevelTrace.Checked)
+                    levelFilter |= LogLevels.Trace;
                 if (cbFilterLevelDebug.Checked)
                     levelFilter |= LogLevels.Debug;
                 if (cbFilterLevelInfo.Checked)

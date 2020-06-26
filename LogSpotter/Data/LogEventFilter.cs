@@ -47,7 +47,7 @@ namespace HciSolutions.LogSpotter.Data
             _exceptionRegex = null;
             _fileNameRegex = null;
             _loggerRegex = null;
-            LogLevels = LogLevels.Debug | LogLevels.Info | LogLevels.Warn | LogLevels.Error | LogLevels.Fatal;
+            LogLevels = LogLevels.Trace | LogLevels.Debug | LogLevels.Info | LogLevels.Warn | LogLevels.Error | LogLevels.Fatal;
             _maxDate = null;
             _messageRegex = null;
             _minDate = null;
@@ -179,25 +179,25 @@ namespace HciSolutions.LogSpotter.Data
                 StringBuilder sb = new StringBuilder();
 
                 if (_loggerRegex != null)
-                    sb.AppendLine(String.Format("{0}={1}", LOGGER_KEY, _loggerRegex));
+                    sb.AppendLine($"{LOGGER_KEY}={_loggerRegex}");
                 if (_threadRegex != null)
-                    sb.AppendLine(String.Format("{0}={1}", THREAD_KEY, _threadRegex));
+                    sb.AppendLine($"{THREAD_KEY}={_threadRegex}");
                 if (_minDate != null)
-                    sb.AppendLine(String.Format("{0}={1}", MINDATE_KEY, _minDate));
+                    sb.AppendLine($"{MINDATE_KEY}={_minDate}");
                 if (_maxDate != null)
-                    sb.AppendLine(String.Format("{0}={1}", MAXDATE_KEY, _maxDate));
+                    sb.AppendLine($"{MAXDATE_KEY}={_maxDate}");
                 if (_domainRegex != null)
-                    sb.AppendLine(String.Format("{0}={1}", DOMAIN_KEY, _domainRegex));
+                    sb.AppendLine($"{DOMAIN_KEY}={_domainRegex}");
                 if (_classNameRegex != null)
-                    sb.AppendLine(String.Format("{0}={1}", CLASSNAME_KEY, _classNameRegex));
+                    sb.AppendLine($"{CLASSNAME_KEY}={_classNameRegex}");
                 if (_fileNameRegex != null)
-                    sb.AppendLine(String.Format("{0}={1}", FILENAME_KEY, _fileNameRegex));
+                    sb.AppendLine($"{FILENAME_KEY}={_fileNameRegex}");
                 if (_messageRegex != null)
-                    sb.AppendLine(String.Format("{0}={1}", MESSAGE_KEY, _messageRegex));
+                    sb.AppendLine($"{MESSAGE_KEY}={_messageRegex}");
                 if (_exceptionRegex != null)
-                    sb.AppendLine(String.Format("{0}={1}", EXCEPTION_KEY, _exceptionRegex));
-                if (LogLevels != (LogLevels.Debug | LogLevels.Info | LogLevels.Warn | LogLevels.Error | LogLevels.Fatal))
-                    sb.AppendLine(String.Format("{0}={1}", LOGLEVELS_KEY, LogLevels));
+                    sb.AppendLine($"{EXCEPTION_KEY}={_exceptionRegex}");
+                if (LogLevels != (LogLevels.Trace | LogLevels.Debug | LogLevels.Info | LogLevels.Warn | LogLevels.Error | LogLevels.Fatal))
+                    sb.AppendLine($"{LOGLEVELS_KEY}={LogLevels}");
 
                 FilterString = sb.ToString();
             }

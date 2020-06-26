@@ -4,17 +4,14 @@ using System.Xml.Serialization;
 namespace HciSolutions.LogSpotter.Data.Config
 {
     /// <summary>
-    /// Represents the list of <see cref="EventColor"/> for all possible log levels.
+    /// Represents the list of <see cref="EventColor" /> for all possible log levels.
     /// </summary>
     public class EventColors
     {
-        #region Private Members
+        #region Public Constructors
 
-        #endregion
-
-        #region Constructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="EventColorCollection"/> class with default colors.
+        /// Initializes a new instance of the <see cref="EventColorCollection" /> class with default colors.
         /// </summary>
         public EventColors()
         {
@@ -24,9 +21,18 @@ namespace HciSolutions.LogSpotter.Data.Config
             Error = new EventColor(Color.White, Color.FromArgb(255, 0, 0));
             Fatal = new EventColor(Color.FromArgb(255, 0, 0), Color.FromArgb(255, 255, 0));
         }
+
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets the trace colors.
+        /// </summary>
+        /// <value>The trace colors.</value>
+        [XmlElement("trace")]
+        public EventColor Trace { get; set; }
+
         /// <summary>
         /// Gets or sets the debug colors.
         /// </summary>

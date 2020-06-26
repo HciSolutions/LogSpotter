@@ -94,6 +94,10 @@ namespace HciSolutions.LogSpotter.Controls
                 // Select the right colors
                 switch (ev.Level)
                 {
+                    case LogLevels.Trace:
+                        backColor = Config.Current.EventColors.Trace.BackgroundColor;
+                        foreColor = Config.Current.EventColors.Trace.ForegroundColor;
+                        break;
                     case LogLevels.Debug:
                         backColor = Config.Current.EventColors.Debug.BackgroundColor;
                         foreColor = Config.Current.EventColors.Debug.ForegroundColor;
