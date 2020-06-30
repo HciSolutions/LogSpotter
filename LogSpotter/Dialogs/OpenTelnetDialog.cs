@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using HciSolutions.LogSpotter.Data.Config;
 
-namespace HciSolutions.LogSpotter
+namespace HciSolutions.LogSpotter.Dialogs
 {
     /// <summary>
     /// Custom dialog used to open a new Telnet log.

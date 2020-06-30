@@ -15,6 +15,7 @@ namespace HciSolutions.LogSpotter.Data.Config
         /// </summary>
         public EventColors()
         {
+            Trace = new EventColor(Color.White, Color.DarkGreen);
             Debug = new EventColor(Color.White, Color.Black);
             Info = new EventColor(Color.White, Color.FromArgb(0, 0, 255));
             Warning = new EventColor(Color.White, Color.FromArgb(255, 128, 0));

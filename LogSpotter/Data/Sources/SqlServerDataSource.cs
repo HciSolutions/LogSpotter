@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using HciSolutions.LogSpotter.Properties;
 
@@ -50,16 +51,18 @@ namespace HciSolutions.LogSpotter.Data.Sources
     /// 			ON [dbo].[EXECUTION_LOG]([LOGGER] ASC) WITH (FILLFACTOR = 70); 
     ///  </code>
     /// </example>
+    [LogDataSourceType("SqlServerDatabase")]
     class SqlServerDataSource : LogDataSource
     {
         #region Private Fields
 
         private readonly SqlConnection _connection;
 
-        private readonly Dictionary<PropertyInfo, string> _logEventMapping = new Dictionary<PropertyInfo, string>();
-        private int _lastLoadedLogId;
         private readonly Timer _timer;
+        private int _lastLoadedLogId;
         private bool _loading;
+        private readonly Parameters _parameters;
+        private Dictionary<PropertyInfo, string> _mapping;
 
         #endregion
 
@@ -68,7 +71,11 @@ namespace HciSolutions.LogSpotter.Data.Sources
         public SqlServerDataSource(string connectionString)
             : base(connectionString)
         {
-            _connection = new SqlConnection(connectionString);
+            if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
+
+            _parameters = JsonSerializer.Deserialize<Parameters>(connectionString);
+            _mapping = _parameters.GetPropertyMapping();
+            _connection = new SqlConnection(_parameters.ConnectionString);
             _timer = new Timer(HandleTimerExpired, null, 1000, 1000);
         }
 
@@ -81,23 +88,51 @@ namespace HciSolutions.LogSpotter.Data.Sources
         /// <summary>
         /// Gets the mapping between <see cref="LogEvent" /> and column on <see cref="TableName" />.
         /// </summary>
-        public Dictionary<PropertyInfo, string> LogEventMapping => _logEventMapping;
+        public Dictionary<PropertyInfo, string> LogEventMapping => _mapping;
 
         /// <summary>
-        /// Gets or sets the column used to order the logs (descending). Often
+        /// Gets or sets the column used to order the logs. Often
         /// this is the time stamps of log.
         /// </summary>
-        public string OrderingColumn { get; set; }
+        public string OrderingColumn => _parameters.OrderingColumn;
 
         /// <summary>
         /// Gets or sets the incremental identity primary key used to load incrementally the logs.
         /// </summary>
-        public string PrimaryKey { get; set; }
+        public string PrimaryKey => _parameters.PrimaryKey;
 
         /// <summary>
         /// Gets or sets the table name where are stored the logs.
         /// </summary>
-        public string TableName { get; set; }
+        public string TableName => _parameters.TableName;
+
+        #endregion
+
+        #region Public Static Methods
+
+        /// <summary>
+        /// Builds the connections string for <see cref="SqlServerDataSource" />.
+        /// </summary>
+        /// <param name="dbConnectionString">The SqlServer connection string.</param>
+        /// <param name="tableName">The name of table that contains logs.</param>
+        /// <param name="primaryKey">The primary key that must be identity.</param>
+        /// <param name="orderingColumn">The column that is used to order result.</param>
+        /// <param name="mapping">The mapping from <paramref name="tableName" /> columns to <see cref="LogEvent" /> object.</param>
+        /// <returns>The connection string used to initialize a <see cref="SqlServerDataSource" />.</returns>
+        public static string BuildConnectionString(string dbConnectionString, string tableName, string primaryKey, string orderingColumn, Dictionary<PropertyInfo, string> mapping)
+        {
+            var parameters = new Parameters
+            {
+                ConnectionString = dbConnectionString,
+                TableName = tableName,
+                PrimaryKey = primaryKey,
+                OrderingColumn = orderingColumn,
+                Mapping = mapping.ToDictionary(p => p.Key.Name, p => p.Value),
+            };
+
+            var connectionString = JsonSerializer.Serialize(parameters);
+            return connectionString;
+        }
 
         #endregion
 
@@ -132,7 +167,7 @@ namespace HciSolutions.LogSpotter.Data.Sources
             cmdText.Append("SELECT TOP(");
             cmdText.Append(Config.Config.Current.MaxEvents);
             cmdText.Append(") ");
-            cmdText.Append(string.Join(", ", _logEventMapping.Values.ToArray()));
+            cmdText.Append(string.Join(", ", LogEventMapping.Values.Where(v => !string.IsNullOrEmpty(v)).ToArray()));
             cmdText.Append(" FROM ");
             cmdText.Append(TableName);
             cmdText.Append(" WHERE ");
@@ -141,9 +176,9 @@ namespace HciSolutions.LogSpotter.Data.Sources
             cmdText.Append(_lastLoadedLogId);
             cmdText.Append(" ORDER BY ");
             cmdText.Append(OrderingColumn);
-            cmdText.Append(" DESC, ");
+            cmdText.Append(" ASC, ");
             cmdText.Append(PrimaryKey);
-            cmdText.Append(" DESC");
+            cmdText.Append(" ASC");
 
             return cmdText.ToString();
         }
@@ -183,15 +218,28 @@ namespace HciSolutions.LogSpotter.Data.Sources
                     var command = new SqlCommand(GetCommandText(), _connection);
                     using (var reader = command.ExecuteReader())
                     {
-                        while (reader.NextResult())
+                        while (reader.Read())
                         {
                             var logEvent = new LogEvent();
 
                             // Set values to new log instance
-                            foreach (var mapping in _logEventMapping)
+                            foreach (var mapping in LogEventMapping.Where(m => !string.IsNullOrEmpty(m.Value)))
                             {
-                                var value = reader.GetValue(reader.GetOrdinal(mapping.Value));
-                                mapping.Key.SetValue(logEvent, value, null);
+                                try
+                                {
+                                    var value = reader.GetValue(reader.GetOrdinal(mapping.Value));
+                                    if (mapping.Key.PropertyType == typeof(LogLevels))
+                                        mapping.Key.SetValue(logEvent, Enum.Parse(typeof(LogLevels), value.ToString()), null);
+                                    //else if (mapping.Key.PropertyType == typeof(DateTime))
+                                    //    mapping.Key.SetValue(logEvent, DateTime.Parse(value.ToString()), null);
+                                    else if (mapping.Key.PropertyType == typeof(string))
+                                        mapping.Key.SetValue(logEvent, value?.ToString(), null);
+                                    else
+                                        mapping.Key.SetValue(logEvent, value, null);
+                                }
+                                catch
+                                {
+                                }
                             }
 
                             // Update las log event number
@@ -213,6 +261,34 @@ namespace HciSolutions.LogSpotter.Data.Sources
             var logsArray = LoadLogs().ToArray();
             if (logsArray.Any())
                 OnNewLog(new NewLogEventArgs(logsArray));
+        }
+
+        #endregion
+
+        #region Nested Classes
+
+        private class Parameters
+        {
+            #region Public Properties
+
+            public string ConnectionString { get; set; }
+
+            public Dictionary<string, string> Mapping { get; set; }
+
+            public string OrderingColumn { get; set; }
+
+            public string PrimaryKey { get; set; }
+
+            public string TableName { get; set; }
+
+            #endregion
+
+            public Dictionary<PropertyInfo, string> GetPropertyMapping()
+            {
+                return Mapping.ToDictionary(
+                    kv => typeof(LogEvent).GetProperty(kv.Key),
+                    kv => kv.Value);
+            }
         }
 
         #endregion

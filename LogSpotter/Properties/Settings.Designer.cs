@@ -145,7 +145,7 @@ namespace HciSolutions.LogSpotter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192, 255, 192")]
+        [global::System.Configuration.DefaultSettingValueAttribute("White")]
         public global::System.Drawing.Color TraceBackgroundColor {
             get {
                 return ((global::System.Drawing.Color)(this["TraceBackgroundColor"]));
@@ -157,7 +157,7 @@ namespace HciSolutions.LogSpotter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkGreen")]
         public global::System.Drawing.Color TraceForegroundColor {
             get {
                 return ((global::System.Drawing.Color)(this["TraceForegroundColor"]));

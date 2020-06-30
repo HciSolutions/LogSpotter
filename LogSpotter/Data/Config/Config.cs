@@ -11,23 +11,21 @@ namespace HciSolutions.LogSpotter.Data.Config
     [XmlRoot("log4NetViewerConfig")]
     public class Config
     {
-        #region Private Static Members
+        #region Private Fields
 
         private static string _logFileName;
-        #endregion
-
-        #region Private Members
 
         #endregion
 
-        #region Constructor
+        #region Static Constructor
+
         /// <summary>
-        /// Initializes the static members of the <see cref="Config"/> class.
+        /// Initializes the static members of the <see cref="Config" /> class.
         /// </summary>
         static Config()
         {
             Current = null;
-            _logFileName = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Log4NetViewer"), "Config.xml");            
+            _logFileName = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LogSpotter"), "Config.xml");
 
             if (!Directory.Exists(Path.GetDirectoryName(_logFileName)))
                 Directory.CreateDirectory(Path.GetDirectoryName(_logFileName));
@@ -35,8 +33,12 @@ namespace HciSolutions.LogSpotter.Data.Config
             Load();
         }
 
+        #endregion
+
+        #region Public Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Config"/> class.
+        /// Initializes a new instance of the <see cref="Config" /> class.
         /// </summary>
         /// <param name="eventColors">The event colors.</param>
         /// <param name="recentLogs">The recent logs.</param>
@@ -47,9 +49,11 @@ namespace HciSolutions.LogSpotter.Data.Config
             WindowPositions = new WindowPositioningCollection();
             MaxEvents = 200000;
         }
+
         #endregion
 
         #region Public Static Properties
+
         /// <summary>
         /// Gets the current configuration.
         /// </summary>
@@ -59,6 +63,7 @@ namespace HciSolutions.LogSpotter.Data.Config
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// Gets or sets the event colors.
         /// </summary>
@@ -82,6 +87,12 @@ namespace HciSolutions.LogSpotter.Data.Config
         public List<RecentLog> RecentLogs { get; set; }
 
         /// <summary>
+        /// Gets or sets if milliseconds should be shown in logs.
+        /// </summary>
+        [XmlAttribute("showMilliseconds")]
+        public bool ShowMilliseconds { get; set; }
+
+        /// <summary>
         /// Gets or sets the window positions.
         /// </summary>
         /// <value>The window positions.</value>
@@ -91,7 +102,8 @@ namespace HciSolutions.LogSpotter.Data.Config
 
         #endregion
 
-        #region Public Methods
+        #region Public Static Methods
+
         /// <summary>
         /// Loads the configuration.
         /// </summary>
@@ -115,7 +127,10 @@ namespace HciSolutions.LogSpotter.Data.Config
                     Save();
                 }
             }
-            catch { Current = new Config(); }
+            catch
+            {
+                Current = new Config();
+            }
         }
 
         /// <summary>
@@ -130,6 +145,7 @@ namespace HciSolutions.LogSpotter.Data.Config
                 serializer.Serialize(output, Current);
             }
         }
+
         #endregion
     }
 }

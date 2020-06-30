@@ -1,4 +1,4 @@
-﻿namespace HciSolutions.LogSpotter
+﻿namespace HciSolutions.LogSpotter.Dialogs
 {
     partial class OpenTelnetDialog
     {

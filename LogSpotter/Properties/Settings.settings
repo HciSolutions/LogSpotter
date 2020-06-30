@@ -33,10 +33,10 @@
       <Value Profile="(Default)">Blue</Value>
     </Setting>
     <Setting Name="TraceBackgroundColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">192, 255, 192</Value>
+      <Value Profile="(Default)">White</Value>
     </Setting>
     <Setting Name="TraceForegroundColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Black</Value>
+      <Value Profile="(Default)">DarkGreen</Value>
     </Setting>
   </Settings>
 </SettingsFile>

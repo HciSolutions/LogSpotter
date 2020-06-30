@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using HciSolutions.LogSpotter.Controls;
 using HciSolutions.LogSpotter.Data.Config;
 using HciSolutions.LogSpotter.Data.Sources;
+using HciSolutions.LogSpotter.Dialogs;
 using HciSolutions.LogSpotter.Properties;
 
 namespace HciSolutions.LogSpotter
@@ -361,6 +362,29 @@ namespace HciSolutions.LogSpotter
         }
 
         /// <summary>
+        /// Opens the log from SqlServer database.
+        /// </summary>
+        private void OpenLogFromSqlServerDatabase()
+        {
+            OpenSqlServerDatabaseDialog dlg = null;
+            try
+            {
+                dlg = new OpenSqlServerDatabaseDialog();
+
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                    AddLogTab(new SqlServerDataSource(SqlServerDataSource.BuildConnectionString(dlg.ConnectionString, dlg.TableName, dlg.PrimaryKey, dlg.OrderingColumn, dlg.Mapping)));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, Resources.Err_FailedToOpenLog, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                UpdateUI();
+            }
+        }
+
+        /// <summary>
         /// Opens the recent.
         /// </summary>
         /// <param name="recentEntry">The recent entry that indicates the log to open.</param>
@@ -617,5 +641,15 @@ namespace HciSolutions.LogSpotter
             CurrentTogglePauseCapture();
         }
         #endregion
+
+        private void tsmiDatabaseSqlServer_Click(object sender, EventArgs e)
+        {
+            OpenLogFromSqlServerDatabase();
+        }
+
+        private void tsbLogOpenFromSqlServerDatabase_Click(object sender, EventArgs e)
+        {
+            OpenLogFromSqlServerDatabase();
+        }
     }
 }
