@@ -76,8 +76,8 @@ namespace HciSolutions.LogSpotter
             this.bsColorWarning = new System.Windows.Forms.BindingSource(this.components);
             this.bsColorError = new System.Windows.Forms.BindingSource(this.components);
             this.bsColorFatal = new System.Windows.Forms.BindingSource(this.components);
-            this.bsConfig = new System.Windows.Forms.BindingSource(this.components);
             this.bsColorTrace = new System.Windows.Forms.BindingSource(this.components);
+            this.bsConfig = new System.Windows.Forms.BindingSource(this.components);
             this.tlpMain.SuspendLayout();
             this.flpButtons.SuspendLayout();
             this.tcMain.SuspendLayout();
@@ -91,8 +91,8 @@ namespace HciSolutions.LogSpotter
             ((System.ComponentModel.ISupportInitialize)(this.bsColorWarning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsColorError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsColorFatal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsConfig)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsColorTrace)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsConfig)).BeginInit();
             this.SuspendLayout();
             // 
             // tlpMain
@@ -467,6 +467,7 @@ namespace HciSolutions.LogSpotter
             // pnlLogTraceBackgroundColor
             // 
             this.pnlLogTraceBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlLogTraceBackgroundColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.bsColorTrace, "BackgroundColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.pnlLogTraceBackgroundColor.Location = new System.Drawing.Point(56, 23);
             this.pnlLogTraceBackgroundColor.Name = "pnlLogTraceBackgroundColor";
             this.pnlLogTraceBackgroundColor.Size = new System.Drawing.Size(71, 14);
@@ -476,6 +477,7 @@ namespace HciSolutions.LogSpotter
             // pnlLogTraceForegroundColor
             // 
             this.pnlLogTraceForegroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlLogTraceForegroundColor.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.bsColorTrace, "ForegroundColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.pnlLogTraceForegroundColor.Location = new System.Drawing.Point(137, 23);
             this.pnlLogTraceForegroundColor.Name = "pnlLogTraceForegroundColor";
             this.pnlLogTraceForegroundColor.Size = new System.Drawing.Size(71, 14);
@@ -486,6 +488,8 @@ namespace HciSolutions.LogSpotter
             // 
             this.lbLogTraceSample.AutoSize = true;
             this.lbLogTraceSample.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lbLogTraceSample.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", this.bsColorTrace, "BackgroundColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.lbLogTraceSample.DataBindings.Add(new System.Windows.Forms.Binding("ForeColor", this.bsColorTrace, "ForegroundColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.lbLogTraceSample.Location = new System.Drawing.Point(218, 23);
             this.lbLogTraceSample.Margin = new System.Windows.Forms.Padding(3);
             this.lbLogTraceSample.Name = "lbLogTraceSample";
@@ -598,13 +602,13 @@ namespace HciSolutions.LogSpotter
             // 
             this.bsColorFatal.DataSource = typeof(HciSolutions.LogSpotter.Data.Config.EventColor);
             // 
-            // bsConfig
-            // 
-            this.bsConfig.DataSource = typeof(HciSolutions.LogSpotter.Data.Config.Config);
-            // 
             // bsColorTrace
             // 
             this.bsColorTrace.DataSource = typeof(HciSolutions.LogSpotter.Data.Config.EventColor);
+            // 
+            // bsConfig
+            // 
+            this.bsConfig.DataSource = typeof(HciSolutions.LogSpotter.Data.Config.Config);
             // 
             // SettingsForm
             // 
@@ -634,8 +638,8 @@ namespace HciSolutions.LogSpotter
             ((System.ComponentModel.ISupportInitialize)(this.bsColorWarning)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsColorError)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsColorFatal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bsConfig)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bsColorTrace)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bsConfig)).EndInit();
             this.ResumeLayout(false);
 
         }

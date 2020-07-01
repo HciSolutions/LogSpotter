@@ -9,26 +9,38 @@ using HciSolutions.LogSpotter.Properties;
 namespace HciSolutions.LogSpotter.Controls
 {
     /// <summary>
-    /// Displays a collection of <see cref="LogEvent"/>.
+    /// Displays a collection of <see cref="LogEvent" />.
     /// </summary>
     public partial class LogViewer : UserControl
     {
-        #region Private Members
+        #region Private Constants
+
+        private const string DATETIME_WITH_MILLISECONDS = "dd.MM.yyyyHH:mm:ss.fff";
+        private const int MILLISECONDS_TEXTWIDTH = 30;
 
         #endregion
 
-        #region Constructor
+        #region Private Fields
+
+        private bool _showMilliseconds;
+
+        #endregion
+
+        #region Public Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogViewer"/> class.
+        /// Initializes a new instance of the <see cref="LogViewer" /> class.
         /// </summary>
         public LogViewer()
         {
             InitializeComponent();
             FollowLastLog = true;
         }
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// Gets or sets a value indicating whether the selected item list is always the last inserted log.
         /// </summary>
@@ -44,14 +56,43 @@ namespace HciSolutions.LogSpotter.Controls
             get => bsLogs.DataSource as LogEventCollection;
             set => bsLogs.DataSource = (object)value ?? (object)new LogEvent[0];
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether time is shown with milliseconds.
+        /// </summary>
+        /// <value><c>true</c> if time is shown with milliseconds; otherwise, <c>false</c>.</value>
+        public bool ShowMilliseconds
+        {
+            get { return _showMilliseconds; }
+            set
+            {
+                if (_showMilliseconds != value)
+                {
+                    _showMilliseconds = value;
+                    DataGridViewColumn column = dgvLogs.Columns[timeStampDataGridViewTextBoxColumn.Index];
+                    if (_showMilliseconds)
+                    {
+                        column.DefaultCellStyle.Format = DATETIME_WITH_MILLISECONDS;
+                        column.Width += MILLISECONDS_TEXTWIDTH;
+                    }
+                    else
+                    {
+                        column.DefaultCellStyle.Format = "G";
+                        column.Width -= MILLISECONDS_TEXTWIDTH;
+                    }
+                }
+            }
+        }
+
         #endregion
 
-        #region Event Methods
+        #region Private Methods
+
         /// <summary>
         /// Handles the ListChanged event of the bsLogs control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="ListChangedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="ListChangedEventArgs" /> instance containing the event data.</param>
         private void bsLogs_ListChanged(object sender, ListChangedEventArgs e)
         {
             try
@@ -71,14 +112,16 @@ namespace HciSolutions.LogSpotter.Controls
                     }
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         /// <summary>
         /// Handles the CellPainting event of the dgvLogs control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="DataGridViewCellPaintingEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="DataGridViewCellPaintingEventArgs" /> instance containing the event data.</param>
         private void dgvLogs_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             DataGridView grid = sender as DataGridView;
@@ -129,21 +172,18 @@ namespace HciSolutions.LogSpotter.Controls
             e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
             e.Handled = true;
-
         }
-        #endregion
 
         /// <summary>
         /// Handles the DoubleClick event of the tbDetail control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void tbDetail_DoubleClick(object sender, EventArgs e)
         {
             TextBox ctrl = sender as TextBox;
             try
-            {  
-                
+            {
                 if (ctrl == tbDetailLevel)
                     TextViewerForm.ShowTextViewer(this, lblDetailLevelTitle.Text.TrimEnd(' ', ':'), tbDetailLevel.Text);
                 else if (ctrl == tbDetailTimeStamp)
@@ -171,6 +211,6 @@ namespace HciSolutions.LogSpotter.Controls
             }
         }
 
-
+        #endregion
     }
 }

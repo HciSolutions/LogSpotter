@@ -12,14 +12,17 @@ namespace HciSolutions.LogSpotter.Controls
     /// </summary>
     public partial class LogTab : UserControl
     {
-        #region Private Members
-        private LogDataSource _source;
+        #region Private Fields
+
         private LogEventCollection _logs;
+        private LogDataSource _source;
+
         #endregion
 
-        #region Constructor
+        #region Public Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogTab"/> class.
+        /// Initializes a new instance of the <see cref="LogTab" /> class.
         /// </summary>
         public LogTab()
         {
@@ -28,14 +31,10 @@ namespace HciSolutions.LogSpotter.Controls
             _logs = null;
             UpdateStatusIcons();
         }
+
         #endregion
 
         #region Public Properties
-        /// <summary>
-        /// Gets or value indicating whether a filter is active.
-        /// </summary>
-        /// <value><c>true</c> if a filter is active; otherwise, <c>false</c>.</value>
-        public bool IsFiltered => _logs != null && !String.IsNullOrEmpty(_logs.Filter);
 
         /// <summary>
         /// Gets or sets a value indicating whether the selected item list is always the last inserted log.
@@ -50,6 +49,12 @@ namespace HciSolutions.LogSpotter.Controls
                 UpdateStatusIcons();
             }
         }
+
+        /// <summary>
+        /// Gets or value indicating whether a filter is active.
+        /// </summary>
+        /// <value><c>true</c> if a filter is active; otherwise, <c>false</c>.</value>
+        public bool IsFiltered => _logs != null && !String.IsNullOrEmpty(_logs.Filter);
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is paused.
@@ -86,6 +91,7 @@ namespace HciSolutions.LogSpotter.Controls
                         _source.IsOnlineChanged -= new EventHandler(HandleSourceIsOnlineChanged);
                         _source.OpenProgress -= new OpenProgressEventHandler(HandleSourceOpenProgress);
                     }
+
                     if (_logs != null)
                         _logs.ListChanged -= new ListChangedEventHandler(HandleLogsListChanged);
 
@@ -111,7 +117,11 @@ namespace HciSolutions.LogSpotter.Controls
                         {
                             _logs = new LogEventCollection(_source);
                         }
-                        finally { SetProgressMode(false); }
+                        finally
+                        {
+                            SetProgressMode(false);
+                        }
+
                         _logs.ListChanged += new ListChangedEventHandler(HandleLogsListChanged);
                     }
 
@@ -134,6 +144,16 @@ namespace HciSolutions.LogSpotter.Controls
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether time is shown with milliseconds.
+        /// </summary>
+        /// <value><c>true</c> if time is shown with milliseconds; otherwise, <c>false</c>.</value>
+        public bool ShowMilliseconds
+        {
+            get => ucLogView.ShowMilliseconds;
+            set => ucLogView.ShowMilliseconds = value;
+        }
+
+        /// <summary>
         /// Gets or Sets the text associated with this control.
         /// </summary>
         /// <returns>
@@ -144,9 +164,11 @@ namespace HciSolutions.LogSpotter.Controls
             get => _source == null ? String.Empty : _source.ToString();
             set { }
         }
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Applies the current filter.
         /// </summary>
@@ -167,9 +189,52 @@ namespace HciSolutions.LogSpotter.Controls
             ucDisplayFilter.Reset();
             ApplyFilter();
         }
+
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Handles the logs list changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="ListChangedEventArgs" /> instance containing the event data.</param>
+        private void HandleLogsListChanged(object sender, ListChangedEventArgs e)
+        {
+            UpdateEventCount();
+        }
+
+        /// <summary>
+        /// Handles the source error changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void HandleSourceErrorChanged(object sender, EventArgs e)
+        {
+            UpdateStatusIcons();
+        }
+
+        /// <summary>
+        /// Handles the source is online changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void HandleSourceIsOnlineChanged(object sender, EventArgs e)
+        {
+            UpdateStatusIcons();
+        }
+
+        /// <summary>
+        /// Handles the source open progress.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="OpenProgressEventArgs" /> instance containing the event data.</param>
+        private void HandleSourceOpenProgress(object sender, OpenProgressEventArgs e)
+        {
+            tsslLoading.Text = String.Format(Resources.Fmt_LoadingEvents, e.EventCount);
+            Application.DoEvents();
+        }
+
         /// <summary>
         /// Enters the progress mode.
         /// </summary>
@@ -190,44 +255,16 @@ namespace HciSolutions.LogSpotter.Controls
         }
 
         /// <summary>
-        /// Handles the logs list changed.
+        /// Handles the Tick event of the tmrBinkErrorStatus control.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="ListChangedEventArgs"/> instance containing the event data.</param>
-        private void HandleLogsListChanged(object sender, ListChangedEventArgs e)
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tmrBinkErrorStatus_Tick(object sender, EventArgs e)
         {
-            UpdateEventCount();
-        }
-
-        /// <summary>
-        /// Handles the source error changed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void HandleSourceErrorChanged(object sender, EventArgs e)
-        {
-            UpdateStatusIcons();
-        }
-
-        /// <summary>
-        /// Handles the source is online changed.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void HandleSourceIsOnlineChanged(object sender, EventArgs e)
-        {
-            UpdateStatusIcons();
-        }
-
-        /// <summary>
-        /// Handles the source open progress.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="OpenProgressEventArgs"/> instance containing the event data.</param>
-        private void HandleSourceOpenProgress(object sender, OpenProgressEventArgs e)
-        {
-            tsslLoading.Text = String.Format(Resources.Fmt_LoadingEvents, e.EventCount);
-            Application.DoEvents();
+            if (tsslStatusError.Image == null)
+                tsslStatusError.Image = Resources.DataSourceError;
+            else
+                tsslStatusError.Image = null;
         }
 
         /// <summary>
@@ -240,7 +277,9 @@ namespace HciSolutions.LogSpotter.Controls
                 tsslShownEvents.Text = String.Format(Resources.Fmt_ShownEvents, _logs.Count);
                 tsslTotalEvents.Text = String.Format(Resources.Fmt_TotalEvents, _logs.UnfilteredCount);
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -285,23 +324,11 @@ namespace HciSolutions.LogSpotter.Controls
 
                 Application.DoEvents();
             }
-            catch { }
+            catch
+            {
+            }
         }
-        #endregion
 
-        #region Event Methods
-        /// <summary>
-        /// Handles the Tick event of the tmrBinkErrorStatus control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tmrBinkErrorStatus_Tick(object sender, EventArgs e)
-        {
-            if (tsslStatusError.Image == null)
-                tsslStatusError.Image = Resources.DataSourceError;
-            else
-                tsslStatusError.Image = null;
-        }
         #endregion
     }
 }

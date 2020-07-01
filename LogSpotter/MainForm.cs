@@ -14,13 +14,16 @@ namespace HciSolutions.LogSpotter
     /// </summary>
     public partial class MainForm : Form
     {
-        #region Constants
+        #region Private Constants
+
         private const int MAX_RECENT = 20;
+
         #endregion
 
-        #region Constructor
+        #region Public Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainForm"/> class.
+        /// Initializes a new instance of the <see cref="MainForm" /> class.
         /// </summary>
         public MainForm()
         {
@@ -30,9 +33,11 @@ namespace HciSolutions.LogSpotter
 
             Config.Current.WindowPositions.LoadWindow(this);
         }
+
         #endregion
 
         #region Private Properties
+
         /// <summary>
         /// Gets the current page.
         /// </summary>
@@ -60,13 +65,15 @@ namespace HciSolutions.LogSpotter
                 return CurrentPage.Controls[0] as LogTab;
             }
         }
+
         #endregion
 
-        #region Protected methods
+        #region Protected Methods
+
         /// <summary>
-        /// Raises the <see cref="E:System.Windows.Forms.Form.FormClosing"/> event.
+        /// Raises the <see cref="E:System.Windows.Forms.Form.FormClosing" /> event.
         /// </summary>
-        /// <param name="e">A <see cref="T:System.Windows.Forms.FormClosingEventArgs"/> that contains the event data.</param>
+        /// <param name="e">A <see cref="T:System.Windows.Forms.FormClosingEventArgs" /> that contains the event data.</param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
@@ -74,26 +81,32 @@ namespace HciSolutions.LogSpotter
             Config.Current.WindowPositions.SaveWindow(this);
             Config.Save();
         }
+
         #endregion
 
         #region Private Methods
+
         /// <summary>
         /// Adds a new tab for the specified log data source.
         /// </summary>
-        /// <param name="dataSource">The <see cref="LogDataSource"/> for which to add a new page.</param>
+        /// <param name="dataSource">The <see cref="LogDataSource" /> for which to add a new page.</param>
         private void AddLogTab(LogDataSource dataSource)
         {
             TabPage pageCtrl = null;
-            LogTab logCtrl = null;
 
             try
             {
                 // Creates the page
-                pageCtrl = new TabPage(dataSource.ToString(true));
-                pageCtrl.ToolTipText = dataSource.ToString(false);
+                pageCtrl = new TabPage(dataSource.ToString(true))
+                {
+                    ToolTipText = dataSource.ToString(false)
+                };
 
                 // Create and add the log control to the tab page
-                logCtrl = new LogTab();
+                var logCtrl = new LogTab
+                {
+                    ShowMilliseconds = Config.Current.ShowMilliseconds
+                };
                 pageCtrl.Controls.Add(logCtrl);
                 logCtrl.Dock = DockStyle.Fill;
 
@@ -115,6 +128,7 @@ namespace HciSolutions.LogSpotter
                         break;
                     }
                 }
+
                 Config.Current.RecentLogs.Insert(0, new RecentLog(dataSource.ConnectionString, dataSource.Name));
                 if (Config.Current.RecentLogs.Count > MAX_RECENT)
                     Config.Current.RecentLogs.RemoveRange(MAX_RECENT, Config.Current.RecentLogs.Count - MAX_RECENT);
@@ -144,12 +158,12 @@ namespace HciSolutions.LogSpotter
             {
                 tsmiRecent.DropDownItems.Clear();
 
-                foreach(RecentLog recent in Config.Current.RecentLogs)
+                foreach (RecentLog recent in Config.Current.RecentLogs)
                 {
                     try
                     {
                         source = LogDataSourceFactory.Create(recent.Type, recent.ConnectionString);
-                        
+
                         item = tsmiRecent.DropDownItems.Add(
                             source.ToString(true),
                             source.Icon,
@@ -157,20 +171,21 @@ namespace HciSolutions.LogSpotter
                         item.ToolTipText = source.ToString(false);
                         item.Tag = recent;
                     }
-                    catch 
-                    { 
+                    catch
+                    {
                         if (invalidSources == null)
                             invalidSources = new List<RecentLog>();
-                        invalidSources.Add(recent); 
+                        invalidSources.Add(recent);
                     }
                 }
 
                 if (invalidSources != null)
                 {
-                    foreach(RecentLog invalidSource in invalidSources)
+                    foreach (RecentLog invalidSource in invalidSources)
                     {
                         Config.Current.RecentLogs.Remove(invalidSource);
                     }
+
                     Config.Save();
                 }
             }
@@ -182,7 +197,6 @@ namespace HciSolutions.LogSpotter
             {
                 UpdateUI();
             }
-
         }
 
         /// <summary>
@@ -203,50 +217,6 @@ namespace HciSolutions.LogSpotter
             catch (Exception ex)
             {
                 MessageBox.Show(this, ex.Message, Resources.Err_FailedToCloseLog, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                UpdateUI();
-            }
-        }
-
-        /// <summary>
-        /// Toggles the "follow last log" function for the current log tab.
-        /// </summary>
-        private void CurrentToggleFollowLastLog()
-        {
-            LogTab current = null;
-            try
-            {
-                current = CurrentPageLogControl;
-                if (current != null)
-                    current.FollowLastLog = !current.FollowLastLog;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, Resources.Err_FailedToToggleFollowLastLog, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                UpdateUI();
-            }
-        }
-
-        /// <summary>
-        /// Toggles the "Pause capture" function for the current log tab.
-        /// </summary>
-        private void CurrentTogglePauseCapture()
-        {
-            LogTab current = null;
-            try
-            {
-                current = CurrentPageLogControl;
-                if (current != null)
-                    current.IsPaused = !current.IsPaused;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, Resources.Err_FailedToTogglePause, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -299,13 +269,66 @@ namespace HciSolutions.LogSpotter
         }
 
         /// <summary>
+        /// Toggles the "follow last log" function for the current log tab.
+        /// </summary>
+        private void CurrentToggleFollowLastLog()
+        {
+            LogTab current = null;
+            try
+            {
+                current = CurrentPageLogControl;
+                if (current != null)
+                    current.FollowLastLog = !current.FollowLastLog;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, Resources.Err_FailedToToggleFollowLastLog, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                UpdateUI();
+            }
+        }
+
+        /// <summary>
+        /// Toggles the "Pause capture" function for the current log tab.
+        /// </summary>
+        private void CurrentTogglePauseCapture()
+        {
+            LogTab current = null;
+            try
+            {
+                current = CurrentPageLogControl;
+                if (current != null)
+                    current.IsPaused = !current.IsPaused;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, Resources.Err_FailedToTogglePause, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                UpdateUI();
+            }
+        }
+
+        /// <summary>
         /// Edits the settings.
         /// </summary>
         private void EditSettings()
         {
             try
             {
-                new SettingsForm().ShowDialog();
+                var settingsForm = new SettingsForm();
+                if (settingsForm.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (TabPage page in tcLogs.TabPages)
+                    {
+                        var logTab = page.Controls[0] as LogTab;
+                        if (logTab != null)
+                            logTab.ShowMilliseconds = Config.Current.ShowMilliseconds;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -339,17 +362,17 @@ namespace HciSolutions.LogSpotter
         }
 
         /// <summary>
-        /// Opens the log from telnet.
+        /// Opens the log from SqlServer database.
         /// </summary>
-        private void OpenLogFromTelnet()
+        private void OpenLogFromSqlServerDatabase()
         {
-            OpenTelnetDialog dlg = null;
+            OpenSqlServerDatabaseDialog dlg = null;
             try
             {
-                dlg = new OpenTelnetDialog();
+                dlg = new OpenSqlServerDatabaseDialog();
 
                 if (dlg.ShowDialog(this) == DialogResult.OK)
-                    AddLogTab(new TelnetLogDataSource(dlg.HostName, dlg.PortNumber));
+                    AddLogTab(new SqlServerDataSource(SqlServerDataSource.BuildConnectionString(dlg.ConnectionString, dlg.TableName, dlg.PrimaryKey, dlg.OrderingColumn, dlg.Mapping)));
             }
             catch (Exception ex)
             {
@@ -362,17 +385,17 @@ namespace HciSolutions.LogSpotter
         }
 
         /// <summary>
-        /// Opens the log from SqlServer database.
+        /// Opens the log from telnet.
         /// </summary>
-        private void OpenLogFromSqlServerDatabase()
+        private void OpenLogFromTelnet()
         {
-            OpenSqlServerDatabaseDialog dlg = null;
+            OpenTelnetDialog dlg = null;
             try
             {
-                dlg = new OpenSqlServerDatabaseDialog();
+                dlg = new OpenTelnetDialog();
 
                 if (dlg.ShowDialog(this) == DialogResult.OK)
-                    AddLogTab(new SqlServerDataSource(SqlServerDataSource.BuildConnectionString(dlg.ConnectionString, dlg.TableName, dlg.PrimaryKey, dlg.OrderingColumn, dlg.Mapping)));
+                    AddLogTab(new TelnetLogDataSource(dlg.HostName, dlg.PortNumber));
             }
             catch (Exception ex)
             {
@@ -410,6 +433,215 @@ namespace HciSolutions.LogSpotter
         }
 
         /// <summary>
+        /// Handles the SelectedIndexChanged event of the tcLogs control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tcLogs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateUI();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsbFilterApply control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsbFilterApply_Click(object sender, EventArgs e)
+        {
+            CurrentApplyFilter();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsbFilterReset control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsbFilterReset_Click(object sender, EventArgs e)
+        {
+            CurrentResetFilter();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsbLogClose control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsbLogClose_Click(object sender, EventArgs e)
+        {
+            CloseLog();
+        }
+
+        /// <summary>
+        /// Handles the ButtonClick event of the tsbLogOpen control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsbLogOpen_ButtonClick(object sender, EventArgs e)
+        {
+            tsbLogOpen.ShowDropDown();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsbLogOpenFromFile control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsbLogOpenFromFile_Click(object sender, EventArgs e)
+        {
+            OpenLogFromFile();
+        }
+
+        private void tsbLogOpenFromSqlServerDatabase_Click(object sender, EventArgs e)
+        {
+            OpenLogFromSqlServerDatabase();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsbLogOpenFromTelnet control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsbLogOpenFromTelnet_Click(object sender, EventArgs e)
+        {
+            OpenLogFromTelnet();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsbModeFollow control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsbModeFollow_Click(object sender, EventArgs e)
+        {
+            CurrentToggleFollowLastLog();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsbModePaused control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsbModePaused_Click(object sender, EventArgs e)
+        {
+            CurrentTogglePauseCapture();
+        }
+
+        private void tsmiDatabaseSqlServer_Click(object sender, EventArgs e)
+        {
+            OpenLogFromSqlServerDatabase();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiFileCloseLog control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiFileCloseLog_Click(object sender, EventArgs e)
+        {
+            CloseLog();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the exitToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiFileExit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiFileOpenLogFromFile control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiFileOpenLogFromFile_Click(object sender, EventArgs e)
+        {
+            OpenLogFromFile();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiFileOpenLogFromTelnet control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiFileOpenLogFromTelnet_Click(object sender, EventArgs e)
+        {
+            OpenLogFromTelnet();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiFileRecentItems control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiFileRecentItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = null;
+            RecentLog log = null;
+
+            // Obtains the RecentLog instance from the item
+            if ((item = sender as ToolStripItem) == null)
+                return;
+            if ((log = item.Tag as RecentLog) == null)
+                return;
+
+            OpenRecent(log);
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiFileSettings control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiFileSettings_Click(object sender, EventArgs e)
+        {
+            EditSettings();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiFilterApply control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiFilterApply_Click(object sender, EventArgs e)
+        {
+            CurrentApplyFilter();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiFilterReset control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiFilterReset_Click(object sender, EventArgs e)
+        {
+            CurrentResetFilter();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiModeFollow control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiModeFollow_Click(object sender, EventArgs e)
+        {
+            CurrentToggleFollowLastLog();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the tsmiModePaused control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
+        private void tsmiModePaused_Click(object sender, EventArgs e)
+        {
+            CurrentTogglePauseCapture();
+        }
+
+        /// <summary>
         /// Updates the UI controls so that they reflect the current state.
         /// </summary>
         private void UpdateUI()
@@ -439,217 +671,7 @@ namespace HciSolutions.LogSpotter
                 MessageBox.Show(this, ex.Message, Resources.Err_FailedToUpdateControlsState, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         #endregion
-
-        #region Event methods
-        /// <summary>
-        /// Handles the SelectedIndexChanged event of the tcLogs control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tcLogs_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateUI();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsbLogClose control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsbLogClose_Click(object sender, EventArgs e)
-        {
-            CloseLog();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsbFilterApply control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsbFilterApply_Click(object sender, EventArgs e)
-        {
-            CurrentApplyFilter();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsbFilterReset control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsbFilterReset_Click(object sender, EventArgs e)
-        {
-            CurrentResetFilter();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsbModeFollow control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsbModeFollow_Click(object sender, EventArgs e)
-        {
-            CurrentToggleFollowLastLog();
-        }
-
-        /// <summary>
-        /// Handles the ButtonClick event of the tsbLogOpen control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsbLogOpen_ButtonClick(object sender, EventArgs e)
-        {
-            tsbLogOpen.ShowDropDown();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsbLogOpenFromFile control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsbLogOpenFromFile_Click(object sender, EventArgs e)
-        {
-            OpenLogFromFile();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsbLogOpenFromTelnet control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsbLogOpenFromTelnet_Click(object sender, EventArgs e)
-        {
-            OpenLogFromTelnet();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsbModePaused control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsbModePaused_Click(object sender, EventArgs e)
-        {
-            CurrentTogglePauseCapture();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiFileCloseLog control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiFileCloseLog_Click(object sender, EventArgs e)
-        {
-            CloseLog();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the exitToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiFileExit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiFileOpenLogFromFile control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiFileOpenLogFromFile_Click(object sender, EventArgs e)
-        {
-            OpenLogFromFile();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiFileOpenLogFromTelnet control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiFileOpenLogFromTelnet_Click(object sender, EventArgs e)
-        {
-            OpenLogFromTelnet();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiFileRecentItems control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiFileRecentItem_Click(object sender, EventArgs e)
-        {
-            ToolStripItem item = null;
-            RecentLog log = null;
-
-            // Obtains the RecentLog instance from the item
-            if ((item = sender as ToolStripItem) == null)
-                return;
-            if ((log = item.Tag as RecentLog) == null)
-                return;
-
-            OpenRecent(log);
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiFileSettings control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiFileSettings_Click(object sender, EventArgs e)
-        {
-            EditSettings();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiFilterApply control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiFilterApply_Click(object sender, EventArgs e)
-        {
-            CurrentApplyFilter();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiFilterReset control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiFilterReset_Click(object sender, EventArgs e)
-        {
-            CurrentResetFilter();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiModeFollow control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiModeFollow_Click(object sender, EventArgs e)
-        {
-            CurrentToggleFollowLastLog();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the tsmiModePaused control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void tsmiModePaused_Click(object sender, EventArgs e)
-        {
-            CurrentTogglePauseCapture();
-        }
-        #endregion
-
-        private void tsmiDatabaseSqlServer_Click(object sender, EventArgs e)
-        {
-            OpenLogFromSqlServerDatabase();
-        }
-
-        private void tsbLogOpenFromSqlServerDatabase_Click(object sender, EventArgs e)
-        {
-            OpenLogFromSqlServerDatabase();
-        }
     }
 }
